@@ -1,0 +1,33 @@
+version: '3.8'
+
+services:
+  mongotransaction:
+    build: 
+      context: .
+      dockerfile: Dockerfilemongo
+        # image: mongo:latest
+        #    restart: always
+    environment:
+      - MONGO_INITDB_DATABASE=TransactionDB
+    ports:
+      - "27018:27017"
+    networks:
+      - default
+      - nttdata-net
+  transactionapi:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8081:8081"
+    depends_on:
+      - "mongotransaction"
+    networks:
+      - default
+      - nttdata-net
+networks:
+  default: 
+    driver: bridge
+  nttdata-net:
+    external: true
+
